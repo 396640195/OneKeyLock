@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">一键锁屏</string>
+    <string name="start_one_lock">启动一键锁屏</string>
+    <string name="protect_electric">保护电源,为手机省电</string>
+    <string name="quick_entrance_text">添加快捷入口</string>
+    <string name="click_float_window_lock_screen">点击悬浮窗快速锁屏</string>
+    <string name="float_window">悬浮窗</string>
+    <string name="dida_lock_text">滴嗒锁屏</string>
+    <string name="dida_artifact">滴嗒DIY神泣,千万用户选择</string>
+    <string name="download_failed">下载失败</string>
+    <string name="disable_one_key_lock">禁用一键锁屏</string>
+    <string name="remove_one_key_lock">卸载一键锁屏</string>
+    <string name="please_activate_device">激活后才能使用锁屏功能哦亲^^</string>
+    <string name="already_disable_one_key_lock">已禁用一键锁屏</string>
+    <string name="already_open_device_permission">已启用一键锁屏</string>
+    <string name="should_enable_device_permission">尚未启用一键锁屏，确定开启吗?</string>
+    <string name="sure_to_disable_one_key_lock">确定要禁用一键锁屏吗?</string>
+    <string name="sure_to_remove_one_key_lock">确定要卸载一键锁屏吗?</string>
+    <string name="enable_one_key_lock_hint">一键锁屏启用后才可以锁屏哦~</string>
+</resources>
