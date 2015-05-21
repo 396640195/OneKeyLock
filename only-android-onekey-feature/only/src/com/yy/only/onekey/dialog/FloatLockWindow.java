@@ -97,7 +97,7 @@ public class FloatLockWindow {
                     moveCount++;
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (moveCount <= 3) {
+                    if (moveCount <= 6) {
                         mLockManager.lockDevice(OneKeyLockApplication.getDefaultApplication());
                     }
                     setImageResource(R.drawable.icon_float_default);

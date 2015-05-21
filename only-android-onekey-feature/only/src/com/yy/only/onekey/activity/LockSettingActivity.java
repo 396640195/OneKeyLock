@@ -16,8 +16,6 @@ import com.yy.only.onekey.dialog.FloatLockWindow;
 import com.yy.only.onekey.download.DownloadListener;
 import com.yy.only.onekey.download.DownloadManager;
 import com.yy.only.onekey.utils.Const;
-import com.yy.only.onekey.utils.LockManager;
-import com.yy.only.onekey.utils.MD5;
 import com.yy.only.onekey.utils.PreferenceHelper;
 import com.yy.only.onekey.utils.ToastManager;
 import com.yy.only.onekey.view.ProgressView;
@@ -41,7 +39,7 @@ public class LockSettingActivity extends BasicActivity implements DownloadListen
         this.initTopLayout();
         this.initDisableLockLayout();
         this.initOpenDevicePermissionLayout();
-        this.checkDownloadedApkFile();
+        this.initDownloadLayout();
         this.mFloatLockWindow = OneKeyLockApplication.getFloatLockWindow();
     }
 
@@ -126,29 +124,12 @@ public class LockSettingActivity extends BasicActivity implements DownloadListen
             }
         });
     }
-
-    private void checkDownloadedApkFile(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(mDownloadManager.getApk().exists()
-                        && MD5.getMD5(mDownloadManager.getApk()).equals(PreferenceHelper.getString(Const.KEY_OF_APP_MD5,"~"))){
-                    isAlreadyDownload = true;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initDownloadLayout();
-                    }
-                });
-            }
-        }).start();
-    }
     /**
      * 初始化下载布局
      */
     private void initDownloadLayout(){
         final ImageView download = (ImageView) this.findViewById(R.id.image_download);
+        isAlreadyDownload = PreferenceHelper.getBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, false);
         if (isAlreadyDownload) {
             download.setImageResource(R.drawable.download_button_startup_selector);
         } else
@@ -162,11 +143,10 @@ public class LockSettingActivity extends BasicActivity implements DownloadListen
         mProgressLayout = this.findViewById(R.id.progress_layout);
         mTextHintLayout = this.findViewById(R.id.text_hint);
         mProgress = (ProgressView)this.findViewById(R.id.progress);
-
-        //初始化下载
-        download.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAlreadyDownload = PreferenceHelper.getBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, false);
                 if (isAlreadyDownload) {
                     onFinish(mDownloadManager.getApk());
                 } else {
@@ -181,7 +161,10 @@ public class LockSettingActivity extends BasicActivity implements DownloadListen
                     }
                 }
             }
-        });
+        };
+        //初始化下载
+        findViewById(R.id.download_layout).setOnClickListener(listener);
+        download.setOnClickListener(listener);
     }
     @Override
     public void onError() {

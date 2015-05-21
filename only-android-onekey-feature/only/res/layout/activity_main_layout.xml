@@ -143,14 +143,17 @@
             android:layout_marginLeft="15dp" />
 
         <LinearLayout
+            android:id="@+id/download_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_weight="1"
-            android:paddingLeft="10dp">
+            android:paddingLeft="10dp"
+            android:focusable="true"
+            android:clickable="true">
 
-            <TextView
+            <com.yy.only.onekey.view.RedDotTextView
                 android:id="@+id/top_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

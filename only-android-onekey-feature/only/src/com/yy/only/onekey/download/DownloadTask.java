@@ -3,6 +3,7 @@ package com.yy.only.onekey.download;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.yy.only.onekey.common.OneKeyLockApplication;
 import com.yy.only.onekey.utils.Const;
 import com.yy.only.onekey.utils.MD5;
 import com.yy.only.onekey.utils.PreferenceHelper;
@@ -34,13 +35,23 @@ public class DownloadTask implements Runnable {
     public DownloadTask(DownloadListener listener) {
         this.mDelivery = new Delivery(listener);
         this.mQuit = false;
-        File root = Environment.getExternalStorageDirectory();
+        File root = new File(Environment.getExternalStorageDirectory()+File.separator+ OneKeyLockApplication.getDefaultApplication().getPackageName());
+        if(!root.exists()){
+            root.mkdir();
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         String apkName = sdf.format(new Date());
         mFileStore = new File(root, String.format("%1s.apk", apkName));
         if (mFileStore.exists()) {
             mCompeleteSize = mFileStore.length();
         } else {
+            File file[] = root.listFiles();
+            if(file!=null){
+                for(File f: file){
+                    f.delete();
+                }
+            }
+            PreferenceHelper.putBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, false);
             mCompeleteSize = 0;
         }
     }
@@ -77,7 +88,10 @@ public class DownloadTask implements Runnable {
             mTotalSize = mCompeleteSize + mTotalSize;
             if (mCompeleteSize == mTotalSize){
                 mDelivery.onFinish(mFileStore);
+                PreferenceHelper.putBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, true);
                 return;
+            }else{
+                PreferenceHelper.putBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, false);
             }
             mDelivery.onProgressChanged(mCompeleteSize,mTotalSize);
             while ((length = is.read(buffer)) != -1) {
@@ -96,7 +110,7 @@ public class DownloadTask implements Runnable {
             mStatus = DownloadManager.Status.FINISH;
             mDelivery.onProgressChanged(mCompeleteSize,mTotalSize);
             mDelivery.onFinish(mFileStore);
-            PreferenceHelper.putString(Const.KEY_OF_APP_MD5, MD5.getMD5(mFileStore));
+            PreferenceHelper.putBoolean(Const.KEY_OF_APP_DOWNLOAD_STATUS, true);
         } catch (Exception e) {
             e.printStackTrace();
             mDelivery.onError();
